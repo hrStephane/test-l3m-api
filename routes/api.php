@@ -9,6 +9,7 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
+    Route::post('logout', [App\Http\Controllers\Api\AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
