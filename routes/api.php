@@ -10,3 +10,7 @@ Route::get('/user', function (Request $request) {
 Route::prefix('auth')->group(function () {
     Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('users', App\Http\Controllers\Api\UserController::class);
+});
