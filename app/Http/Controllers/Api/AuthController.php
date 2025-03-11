@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -32,9 +33,29 @@ class AuthController extends Controller
         }
     }
 
-    public function register(Request $reauset)
+    public function register(Request $request)
     {
+        $credentials = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string',
+        ]);
 
+        $credentials['password'] = Hash::make($credentials['password']);
+
+        // dd($credentials);
+
+        $user = \App\Models\User::create($credentials);
+        $user->email_verified_at = now();
+        $user->save();
+
+        $token = $user->createToken($user->email)->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+            'token_type' => 'Bearer',
+        ], 201);
     }
 
     public function logout(Request $request)

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,6 +15,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $logedUser = $request->user();
+
         $perPage = $request->limit ?? 10;
         return User::paginate($perPage);
     }
@@ -36,11 +40,30 @@ class UserController extends Controller
             'password' => 'required|string',
         ]);
 
+        // dd($request->all());
+
         try {
-            $user = User::create($request->all());
-            return response()->json($user, 201);
+            DB::beginTransaction();
+
+            $password = !empty($request->password) ? Hash::make($request->password) : Hash::make('password');
+            $email_verified_at = now();
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'email_verified_at' => $email_verified_at,
+                'password' => $password,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'user' => $user,
+                'message' => 'User created successfully',
+            ], 201);
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollBack();
             return response()->json([
                 'message' => 'Error: ' . $th->getMessage(),
             ], 500);
