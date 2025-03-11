@@ -12,14 +12,14 @@ class FundTransactionSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\FundTransaction::factory(5)->create();
-        // \App\Models\FundTransaction::factory()->create([
-        //     'user_id' => 1,
-        //     'reference' => \Illuminate\Support\Str::uuid(),
-        //     'type' => 'deposit',
-        //     'amount' => 1000,
-        //     'status' => 'completed',
-        //     'description' => 'Initial deposit',
-        // ]);
+        // \App\Models\FundTransaction::factory(5)->create();
+        \App\Models\FundTransaction::factory()->create([
+            'user_id' => 1,
+            'reference' => \Illuminate\Support\Str::uuid(),
+            'type' => 'withdrawal',
+            'amount' => 50,
+            'status' => 'completed',
+            'description' => 'Withdrawal of 50',
+        ]);
     }
 }

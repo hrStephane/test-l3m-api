@@ -14,4 +14,5 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', App\Http\Controllers\Api\UserController::class);
+    Route::apiResource('transactions', App\Http\Controllers\FundTransactionController::class);
 });

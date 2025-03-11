@@ -53,7 +53,29 @@ class UserController extends Controller
      */
     public function show($id, Request $request)
     {
+        $user = User::with(['fundTransactions'])->find($id);
 
+        if (!$user) {
+            return response()->json([
+                'error' => true,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $limit = $request->limit ?? 10;
+        $transactions = $user->fundTransactions()->paginate($limit);
+
+        return response()->json([
+            'user' => $user,
+            'transactions' => $transactions,
+            'message' => 'User found',
+        ], 200);
+    }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
         $user = User::find($id);
 
         if (!$user) {
@@ -65,17 +87,8 @@ class UserController extends Controller
 
         return response()->json([
             'user' => $user,
-            'message' => 'User found',
+            'message' => 'User retrieved',
         ], 200);
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
     }
 
     /**
@@ -83,7 +96,20 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        try {
+            $user->update($request->all());
+            return response()->json($user, 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => 'Error: ' . $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
