@@ -47,6 +47,12 @@
 
     Auth Bearer token : auth:sanctum required
 
+    Params {
+        page: integer 
+        limit: integer 
+    }
+
+
   GET|HEAD        api/transactions/{transaction} : Récupérer les détails d'une transaction.
 
     /api/transactions/:transaction_id
@@ -63,9 +69,21 @@
 
     Auth Bearer token : auth:sanctum required
 
+    Params {
+        page: integer 
+        limit: integer 
+    }
+
+
   GET|HEAD        api/users                         : Liste des utilisateurs.
 
     Auth Bearer token : auth:sanctum required
+
+    Params {
+        page: integer 
+        limit: integer 
+    }
+
 
   POST            api/users                         : Créer un nouvel utilisateur.
 
@@ -77,11 +95,16 @@
     
     password: string required
 
-  GET|HEAD        api/users/{id}/transactions       : Liste des transactions d'un utilisateur.
+  GET|HEAD        api/users/{id}/transactions       : Liste paginée des transactions d'un utilisateur.
 
     Auth Bearer token : auth:sanctum required
 
     id: integer required
+
+    Params {
+        page: integer 
+        limit: integer 
+    }
 
   POST            api/users/{id}/transactions       : Créer une nouvelle transaction.
 
