@@ -22,6 +22,21 @@ class FundTransactionController extends Controller
         return FundTransaction::with('user')->paginate($limit);
     }
 
+    public function getAuthedUserTransactions(Request $request)
+    {
+        $user = $request->user();
+        $limit = $request->limit ?? 10;
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'UNAUTHORIZED',
+            ], 401);
+        }
+
+        return $user->fundTransactions()->paginate($limit);
+
+    }
+
     /**
      * Show the form for creating a new resource.
      */
