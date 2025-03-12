@@ -19,6 +19,9 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = auth()->user();
+
+            $user->tokens()->delete();
+
             $token = $user->createToken($user->email)->plainTextToken;
 
             return response()->json([

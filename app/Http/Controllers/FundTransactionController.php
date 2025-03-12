@@ -14,13 +14,10 @@ class FundTransactionController extends Controller
     public function index(Request $request)
     {
         $limit = $request->limit ?? 10;
-        if ($request->has('user_id')) {
-            return FundTransaction::with('user')
-                                   ->where('user_id', $request->user_id)
-                                   ->paginate($limit);
-        }
 
-        return FundTransaction::with('user')->paginate($limit);
+        return FundTransaction::with('user')
+                                ->orderBy('id', 'desc')
+                                ->paginate($limit);
     }
 
     public function getAuthedUserTransactions(Request $request)
@@ -43,6 +40,7 @@ class FundTransactionController extends Controller
         $limit = $request->limit ?? 10;
         return FundTransaction::with('user')
                                 ->where('user_id', $id)
+                                ->orderBy('id', 'desc')
                                 ->paginate($limit);
     }
 
