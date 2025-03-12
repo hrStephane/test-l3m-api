@@ -22,7 +22,7 @@ class FundTransactionFactory extends Factory
             'type' => $this->faker->randomElement(['deposit', 'withdrawal']),
             'amount' => $this->faker->randomFloat(2, 0, 999999),
             'status' => $this->faker->randomElement(['pending', 'completed', 'failed']),
-            'description' => $this->faker->text,
+            'description' => $this->faker->text(30),
         ];
     }
 }

@@ -15,6 +15,8 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', App\Http\Controllers\Api\UserController::class);
-    Route::apiResource('transactions', App\Http\Controllers\FundTransactionController::class);
+    Route::apiResource('transactions', App\Http\Controllers\FundTransactionController::class, ['except'=> ['store', 'update', 'destroy']]);
     Route::get('user/transactions', [App\Http\Controllers\FundTransactionController::class, 'getAuthedUserTransactions']);
+    Route::get('users/{id}/transactions', [App\Http\Controllers\FundTransactionController::class, 'getTransactionsByUser']);
+    Route::post('users/{id}/transactions', [App\Http\Controllers\FundTransactionController::class, 'store']);
 });

@@ -19,6 +19,7 @@ class FundTransaction extends Model
      */
     protected $fillable = [
         'user_id',
+        'reference',
         'type',
         'amount',
         'status',
